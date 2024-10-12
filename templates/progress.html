@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <title>Task Progress</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            margin: 0;
+        }
+
         #progressBar {
             width: 50%;
             background-color: #ddd;
+            margin-bottom: 20px;
         }
 
         #progressBar div {
@@ -14,6 +24,22 @@
             background-color: green;
             text-align: center;
             color: white;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        button {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -23,10 +49,10 @@
     <ul>
         {% for task in tasks %}
         <li>
-            {{ task.description }} - 
-            <button onclick="toggleTask({{ task.id }})">
-                {{ 'Complete' if not task.completed else 'Undo' }}
-            </button>
+            <span>{{ task.description }}</span>
+            <div>
+                <button onclick="toggleTask({{ task.id }})">{{ 'Complete' if not task.completed else 'Complete' }}</button>
+            </div>
         </li>
         {% endfor %}
     </ul>
