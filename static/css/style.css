@@ -1,6 +1,9 @@
+h1 {
+    color: rgb(120, 120, 253)
+}
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #000000;
     margin: 0;
     padding: 0;
     display: flex;
@@ -28,7 +31,7 @@ label {
 }
 
 input[type="text"], input[type="number"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
