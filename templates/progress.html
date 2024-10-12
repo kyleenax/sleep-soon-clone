@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Progress</title>
+    <style>
+        #progressBar {
+            width: 50%;
+            background-color: #ddd;
+        }
+
+        #progressBar div {
+            height: 20px;
+            background-color: green;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task Progress</h1>
+    <div id="progressBar"><div id="progress" style="width:0%">0%</div></div>
+    <ul>
+        {% for task in tasks %}
+        <li>
+            {{ task.description }} - 
+            <button onclick="toggleTask({{ task.id }})">
+                {{ 'Complete' if not task.completed else 'Undo' }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function updateProgress() {
+            fetch('/progress')
+                .then(response => response.json())
+                .then(data => {
+                    const progressElement = document.getElementById('progress');
+                    progressElement.style.width = data.progress + '%';
+                    progressElement.textContent = Math.round(data.progress) + '%';
+                });
+        }
+
+        function toggleTask(taskId) {
+            fetch(`/toggle_task/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateProgress();
+                    }
+                });
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>
