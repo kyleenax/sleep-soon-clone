@@ -6,8 +6,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>SLEEP SOON</h1>
+    <h1 id="curved-title">
+        <span>S</span>
+        <span>L</span>
+        <span>E</span>
+        <span>E</span>
+        <span>P</span>
+        <span>&nbsp;</span>
+        <span>S</span>
+        <span>O</span>
+        <span>O</span>
+        <span>N</span>
+    </h1>
     <img src="{{ url_for('static', filename='images/welcome_graphic.png') }}" alt="Welcome Image">
-    <button onclick="window.location.href='/next_page'">I'm ready to sleep!</button>
+    <button onclick="window.location.href='/next_page'">I'm ready to get more sleep!</button>
 </body>
 </html>
