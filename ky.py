@@ -8,7 +8,7 @@ def welcome():
 
 @app.route('/next')
 def next_page():
-    return render_template('next_page.html')  # Render the next page (e.g., to-do list form)
+    return render_template('sleep.html')  # Render the next page (e.g., to-do list form)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
