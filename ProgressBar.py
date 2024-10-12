@@ -1,23 +1,17 @@
 from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
-# Simulated database of tasks
-tasks = [
-    {'id': 1, 'description': 'Task 1', 'completed': True},
-    {'id': 2, 'description': 'Task 2', 'completed': False},
-    {'id': 3, 'description': 'Task 3', 'completed': False}
-]
+
+# Global progress value
+progress_value = 0
 
 @app.route('/')
 def index():
-    return render_template('progress.html', tasks=tasks)
+    return render_template('progress.html')
 
 @app.route('/progress')
 def progress():
-    total_tasks = len(tasks)
-    completed_tasks = sum(1 for task in tasks if task['completed'])
-    progress = (completed_tasks / total_tasks) * 100
-    return jsonify({"progress": progress})
+    return jsonify({"progress": progress_value})
 
 @app.route('/toggle_task/<int:task_id>')
 def toggle_task(task_id):
@@ -26,7 +20,19 @@ def toggle_task(task_id):
         task['completed'] = not task['completed']
     return jsonify({'status': 'success', 'id': task_id, 'completed': task['completed']})
 
+# New route to increase progress
+@app.route('/increase_progress')
+def increase_progress():
+    global progress_value
+    progress_value = min(100, progress_value + 33.3)  # Increase by 10%
+    return jsonify({'status': 'success', 'progress': progress_value})
+
+# New route to decrease progress
+@app.route('/decrease_progress')
+def decrease_progress():
+    global progress_value
+    progress_value = max(0, progress_value - 33.3)  # Decrease by 10%
+    return jsonify({'status': 'success', 'progress': progress_value})
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
