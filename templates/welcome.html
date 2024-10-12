@@ -19,6 +19,6 @@
         <span>N</span>
     </h1>
     <img src="{{ url_for('static', filename='images/welcome_graphic.png') }}" alt="Welcome Image">
-    <button onclick="window.location.href='/next_page'">I'm ready to get more sleep!</button>
+    <button onclick="location.href='{{ url_for('sleep') }}'">I'm ready to get more sleep!</button>
 </body>
 </html>

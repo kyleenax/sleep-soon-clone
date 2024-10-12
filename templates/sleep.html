@@ -13,7 +13,7 @@
     <form action="/tasks" method="POST">
         <label for="sleep">Desired Sleep (hours):</label>
         <input type="number" id="sleep" name="sleep" placeholder="Enter Desired Sleep" min="0" required>
-        <button type="submit">Next</button>
+        <button onclick="location.href='{{ url_for('tasks') }}'"> Next</button>
     </form>
 </div>
 
