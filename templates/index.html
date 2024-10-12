@@ -2,21 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sleep Soon</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Task Scheduler</title>
 </head>
 <body>
-    <h1>Welcome to Sleep Soon</h1>
-    <form id="scheduleForm">
-        <label for="tasks">Enter your tasks (comma separated):</label>
-        <input type="text" id="tasks" name="tasks" required>
-        <br>
-        <label for="sleep_goal">Enter your sleep goal (hours):</label>
-        <input type="number" id="sleep_goal" name="sleep_goal" required>
-        <br>
-        <input type="submit" value="Optimize Schedule">
+    <h1>Task Scheduler</h1>
+    <form id="taskForm">
+        <label for="sleepGoal">Sleep Goal (hours):</label>
+        <input type="number" id="sleepGoal" name="sleepGoal" required><br><br>
+        
+        <div id="tasks">
+            <div class="task">
+                <input type="text" name="name[]" placeholder="Task Name" required>
+                <input type="number" name="duration[]" placeholder="Duration (hours)" required>
+                <input type="number" name="priority[]" placeholder="Priority" required>
+                <input type="datetime-local" name="deadline[]">
+            </div>
+        </div>
+        
+        <button type="button" onclick="addTask()">Add Task</button>
+        <button type="submit">Generate Schedule</button>
     </form>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <div id="result"></div>
+
+    <script>
+        function addTask() {
+            const tasksDiv = document.getElementById('tasks');
+            const newTask = tasksDiv.firstElementChild.cloneNode(true);
+            tasksDiv.appendChild(newTask);
+        }
+
+        document.getElementById('taskForm').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+                sleep_goal: formData.get('sleepGoal'),
+                tasks: []
+            };
+            
+            const names = formData.getAll('name[]');
+            const durations = formData.getAll('duration[]');
+            const priorities = formData.getAll('priority[]');
+            const deadlines = formData.getAll('deadline[]');
+            
+            for (let i = 0; i < names.length; i++) {
+                data.tasks.push({
+                    name: names[i],
+                    duration: parseFloat(durations[i]),
+                    priority: parseInt(priorities[i]),
+                    deadline: deadlines[i] || null
+                });
+            }
+            
+            fetch('/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+    </script>
 </body>
 </html>
