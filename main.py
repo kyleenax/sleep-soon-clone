@@ -30,7 +30,7 @@ app.secret_key = 'your_secret_key'  # Needed for session management
 def index():
     return render_template('sleep.html')
 
-@app.route('/tasks', methods=['POST'])
+@app.route('/tasks', methods=['GET'])
 def tasks():
     # Save the sleep hours input from the first page to session
     sleep_hours = request.form.get('sleep')
@@ -90,12 +90,12 @@ def generate():
 @app.route('/process_tasks', methods=['POST'])
 def process_tasks():
     # Get the task from the form submission
-    task = request.form.get('task')
+    task = request.form.get('tasks')
 
     # Here you could add logic to process and save tasks, or display them.
 
     # Example: Returning a success message with the entered task
-    return f"Task '{task}' has been successfully submitted!"
+    return f"Task '{tasks}' has been successfully submitted!"
 
 if __name__ == '__main__':
     app.run(debug=True)
