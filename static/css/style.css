@@ -1,0 +1,53 @@
+/* Set the body style */
+body {
+    background: url('../images/background.png') repeat; /* Background image */
+    animation: moveBackground 60s linear infinite; /* Animation for moving background */
+    color: white;                /* White text */
+    display: flex;               /* Use Flexbox for centering */
+    flex-direction: column;      /* Stack elements vertically */
+    justify-content: center;     /* Center vertically */
+    align-items: center;         /* Center horizontally */
+    height: 100vh;              /* Full viewport height */
+    margin: 0;                  /* Remove default margin */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;  /* Font style */
+}
+
+/* Animation to move background */
+@keyframes moveBackground {
+    from {
+        background-position: 0 0; /* Start position */
+    }
+    to {
+        background-position: 100% 100%; /* End position */
+    }
+}
+
+/* Set the heading style */
+h1 {
+    text-transform: uppercase;    /* Make text all caps */
+    font-size: 3em;              /* Adjust font size */
+    margin-bottom: 20px;         /* Space between text and image */
+}
+
+/* Set the image style */
+img {
+    width: 300px;                /* Set desired width for the image */
+    height: auto;                /* Maintain aspect ratio */
+}
+
+/* Set the button style */
+button {
+    margin-top: 20px;            /* Space between image and button */
+    padding: 10px 20px;          /* Button padding */
+    background-color: white;      /* Button background */
+    color: #001f3f;              /* Button text color */
+    border: none;                /* Remove border */
+    border-radius: 5px;         /* Rounded corners */
+    cursor: pointer;             /* Pointer on hover */
+    font-size: 1em;              /* Button font size */
+}
+
+/* Change button color on hover */
+button:hover {
+    background-color: #f0f0f0;   /* Light gray on hover */
+}

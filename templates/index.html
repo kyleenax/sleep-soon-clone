@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Scheduler</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.7/main.global.min.js"></script>
 </head>
 <body>
     <h1>Task Scheduler</h1>
+
     <form id="taskForm">
         <label for="sleepGoal">Sleep Goal (hours):</label>
         <input type="number" id="sleepGoal" name="sleepGoal" required><br><br>
@@ -23,15 +27,17 @@
         <button type="submit">Generate Schedule</button>
     </form>
     
-    <div id="result"></div>
+    <div id="calendar"></div>
 
     <script>
+        // Add another task dynamically
         function addTask() {
             const tasksDiv = document.getElementById('tasks');
             const newTask = tasksDiv.firstElementChild.cloneNode(true);
             tasksDiv.appendChild(newTask);
         }
 
+        // Handle form submission
         document.getElementById('taskForm').onsubmit = function(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -39,12 +45,12 @@
                 sleep_goal: formData.get('sleepGoal'),
                 tasks: []
             };
-            
+
             const names = formData.getAll('name[]');
             const durations = formData.getAll('duration[]');
             const priorities = formData.getAll('priority[]');
             const deadlines = formData.getAll('deadline[]');
-            
+
             for (let i = 0; i < names.length; i++) {
                 data.tasks.push({
                     name: names[i],
@@ -53,7 +59,8 @@
                     deadline: deadlines[i] || null
                 });
             }
-            
+
+            // Send tasks to the backend
             fetch('/schedule', {
                 method: 'POST',
                 headers: {
@@ -63,12 +70,24 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
+                alert('Tasks saved successfully!');
+                calendar.refetchEvents();  // Refresh the FullCalendar with the new tasks
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         };
+
+        // Initialize FullCalendar
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '/api/events'  // Fetch events from the backend
+            });
+            calendar.render();
+        });
     </script>
 </body>
 </html>
+
