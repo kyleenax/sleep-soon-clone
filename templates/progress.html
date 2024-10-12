@@ -46,6 +46,13 @@
 <body>
     <h1>Task Progress</h1>
     <div id="progressBar"><div id="progress" style="width:0%">0%</div></div>
+
+    <!-- New buttons to increase and decrease progress -->
+    <div>
+        <button onclick="increaseProgress()">Increase Progress</button>
+        <button onclick="decreaseProgress()">Decrease Progress</button>
+    </div>
+
     <ul>
         {% for task in tasks %}
         <li>
@@ -70,6 +77,27 @@
 
         function toggleTask(taskId) {
             fetch(`/toggle_task/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateProgress();
+                    }
+                });
+        }
+
+        // Functions to increase and decrease progress
+        function increaseProgress() {
+            fetch('/increase_progress')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateProgress();
+                    }
+                });
+        }
+
+        function decreaseProgress() {
+            fetch('/decrease_progress')
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
