@@ -1,0 +1,30 @@
+/* Styling for the Sleep section */
+.sleep-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e8f5e9; /* Light green background for sleep section */
+    border: 1px solid #c8e6c9; /* Light green border */
+    border-radius: 8px;
+}
+
+.sleep-section label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2e7d32; /* Dark green for the label */
+}
+
+.sleep-section input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #c8e6c9; /* Border matching the section */
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f1f8e9; /* Slightly lighter green for input background */
+}
+
+.sleep-section input[type="number"]:focus {
+    outline: none;
+    border-color: #388e3c; /* Dark green when input is focused */
+    box-shadow: 0 0 5px rgba(56, 142, 60, 0.5); /* Shadow effect on focus */
+}
