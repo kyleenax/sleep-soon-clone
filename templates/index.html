@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Scheduler</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Optimized Task Scheduler</h1>
+    <form id="task-form">
+        <div id="tasks-container">
+            <div class="task">
+                <label>Task Name: <input type="text" name="task-name"></label>
+                <label>Duration (hours): <input type="number" name="task-duration"></label>
+                <label>Deadline (YYYY-MM-DD HH:MM): <input type="text" name="task-deadline"></label>
+            </div>
+        </div>
+        <button type="button" id="add-task">Add Another Task</button><br><br>
+        <label>Sleep Goal (hours): <input type="number" id="sleep-goal" value="8"></label><br><br>
+        <button type="button" id="submit-tasks">Get Optimized Schedule</button>
+    </form>
+
+    <h2>Optimized Schedule:</h2>
+    <pre id="schedule-output"></pre>
+
+    <script>
+        $(document).ready(function () {
+            // Add a new task input group
+            $("#add-task").click(function () {
+                $("#tasks-container").append(`
+                    <div class="task">
+                        <label>Task Name: <input type="text" name="task-name"></label>
+                        <label>Duration (hours): <input type="number" name="task-duration"></label>
+                        <label>Deadline (YYYY-MM-DD HH:MM): <input type="text" name="task-deadline"></label>
+                    </div>
+                `);
+            });
+
+            // Submit the form and get the optimized schedule
+            $("#submit-tasks").click(function () {
+                const tasks = [];
+                $(".task").each(function () {
+                    const taskName = $(this).find("input[name='task-name']").val();
+                    const taskDuration = $(this).find("input[name='task-duration']").val();
+                    const taskDeadline = $(this).find("input[name='task-deadline']").val();
+
+                    if (taskName && taskDuration && taskDeadline) {
+                        tasks.push({
+                            name: taskName,
+                            duration: parseFloat(taskDuration),
+                            deadline: taskDeadline
+                        });
+                    }
+                });
+
+                const sleepGoal = parseFloat($("#sleep-goal").val());
+
+                // Send data to the Flask backend
+                $.ajax({
+                    url: "/schedule",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ tasks: tasks, sleep_goal: sleepGoal }),
+                    success: function (response) {
+                        $("#schedule-output").text(JSON.stringify(response, null, 2));
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
