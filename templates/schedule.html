@@ -75,12 +75,15 @@
                     <td>{{ item.end }}</td>
                     <td>{{ item.duration }}</td>
                     <td>
-                        <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                        {% if item.name != "Sleep" %}  <!-- Only show checkbox if the task is not sleep -->
+                            <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
 
         <!-- Celebration Message -->
         <div id="celebrationMessage" class="celebration-message">🎉 Congratulations! You've completed all tasks! 🎉</div>
