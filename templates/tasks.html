@@ -129,6 +129,7 @@
                     <input type="text" name="task{{ loop.index }}" class="form-control" value="{{ task[0] }}" required>
                     <label for="task{{ loop.index }}_duration">Duration (hours):</label>
                     <input type="number" name="task{{ loop.index }}_duration" class="form-control" value="{{ task[1] }}" required min="0">
+                    <button type="button" class="btn btn-danger" onclick="removeTask(this)">Remove</button>
                 </div>
             {% else %}
                 <div class="form-group">

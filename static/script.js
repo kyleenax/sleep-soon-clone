@@ -13,4 +13,11 @@ document.getElementById('schedule-form').addEventListener('submit', async functi
 
     const result = await response.json();
     document.getElementById('schedule-result').innerText = JSON.stringify(result);
+    
+    function removeTask(taskNumber) {
+        // Code to remove the task dynamically from the form
+        const taskDiv = document.querySelector(`.task:nth-child(${taskNumber})`);
+        taskDiv.remove();
+    }
+    
 });

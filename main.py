@@ -143,9 +143,9 @@ def generate_schedule():
         max_available_time_for_tasks = (21 - int(start_time.split(':')[0]))  # Time until 9 PM
 
         if total_duration > max_available_time_for_tasks:
-            # Render the tasks page with an error message
             error_message = "The total duration of tasks and breaks exceeds the time available before sleep at 9:00 PM."
-            return render_template('tasks.html', error=error_message, tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400
+            return render_template('tasks.html', error=error_message, tasks=tasks, sleep_hours=sleep_hours, start_time=start_time, show_remove=True), 400
+
 
         # Generate the schedule with tasks before sleep
         schedule = []
