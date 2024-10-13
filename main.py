@@ -128,7 +128,7 @@ def generate_schedule():
         sleep_hours = session.get('sleep_hours', 0)  # Default to 0 if not set
         start_time = session.get('start_time', '00:00')  # Default to '00:00' if not set
         tasks = []
-        total_duration = sleep_hours
+        total_duration = 0  # We calculate total duration of tasks first
 
         # List of mental health activities
         activities = ['meditate', 'yoga', 'walk', 'eat', 'drink water', 'nap', 'HIIT']
@@ -148,11 +148,13 @@ def generate_schedule():
                 except ValueError:
                     return "Invalid task duration. Please enter a valid number.", 400
 
-        # Ensure the total time (tasks, sleep, and breaks) doesn't exceed 24 hours
+        # Ensure that tasks and breaks do not exceed 24 hours
         total_break_time = (len(tasks) - 1) * 0.25  # 15-minute break between each task except the last one
         total_duration += total_break_time
 
-        if total_duration > 24:
+        # Calculate remaining hours available for sleep
+        available_time_for_sleep = 24 - total_duration
+        if sleep_hours > available_time_for_sleep:
             return "The total duration of tasks, sleep, and breaks cannot exceed 24 hours.", 400
 
         # Generate the schedule
@@ -160,16 +162,6 @@ def generate_schedule():
         start_hour, start_minute = map(int, start_time.split(':'))
         current_time_hour = start_hour
         current_time_minute = start_minute
-
-        # Add sleep period to schedule
-        sleep_end_hour = (current_time_hour + sleep_hours) % 24
-        schedule.append({
-            "name": "Sleep",
-            "start": f"{current_time_hour:02}:{current_time_minute:02}",
-            "end": f"{sleep_end_hour:02}:{current_time_minute:02}",
-            "duration": sleep_hours
-        })
-        current_time_hour = sleep_end_hour
 
         # Add tasks to schedule, including 15-minute breaks with mental health suggestions
         for index, (task_name, task_duration) in enumerate(tasks):
@@ -184,8 +176,6 @@ def generate_schedule():
 
             # Add a 15-minute break with a random mental health suggestion, except for the last task
             if index < len(tasks) - 1:
-
-
                 if current_time_minute >= 60:
                     current_time_hour = (current_time_hour + 1) % 24
                     current_time_minute = current_time_minute % 60
@@ -204,6 +194,15 @@ def generate_schedule():
                 if current_time_minute >= 60:
                     current_time_hour = (current_time_hour + 1) % 24
                     current_time_minute = current_time_minute % 60
+
+        # Now add sleep as the last thing
+        sleep_end_hour = (current_time_hour + sleep_hours) % 24
+        schedule.append({
+            "name": "Sleep",
+            "start": f"{current_time_hour:02}:{current_time_minute:02}",
+            "end": f"{sleep_end_hour:02}:{current_time_minute:02}",
+            "duration": sleep_hours
+        })
 
         return render_template('schedule.html', schedule=schedule)
 
