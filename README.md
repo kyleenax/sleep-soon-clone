@@ -1,5 +1,7 @@
 # sleep-soon-clone-edit
- 
+Sleep Soon!
+by Kyleena Xin, Kavish Shah, Scotty Hong, Jason Hong
+
 ## Inspiration
 In the spirit of staying up ungodly amount of hours trying to build a project, what inspired us to build Sleep Soon is the everyday hacker who is in desperate need of a good sleep schedule. Like many college students and working adults, we all could use some more sleep especially considering how busy people have become. 
 
