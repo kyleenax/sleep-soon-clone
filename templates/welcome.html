@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to My App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Sleep Soon</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>SLEEP SOON</h1>
-    <img src="{{ url_for('static', filename='images/welcome_graphic.png') }}" alt="Welcome Image">
-    <button onclick="window.location.href='/next_page'">I'm ready to sleep!</button>
+    <div class="background-container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/pencil.png') }}" alt="Pencil Image">
+            <img src="{{ url_for('static', filename='images/welcome_graphic.png') }}" alt="Welcome Image">
+            <img src="{{ url_for('static', filename='images/books.png') }}" alt="Books Image">
+        </div>
+        <button onclick="location.href='{{ url_for('sleep') }}'"> Next</button>
+    </div>
 </body>
 </html>
+

@@ -1,0 +1,65 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Tasks</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <h1>Enter Your Tasks</h1>
+    <form action="/generate" method="POST">
+        <label for="task1">Task 1:</label>
+        <input type="text" id="task1" name="task1" placeholder="Enter Task 1" required>
+
+        <label for="task1_duration">Duration (hours):</label>
+        <input type="number" id="task1_duration" name="task1_duration" placeholder="Enter Task 1 Duration" min="0" required>
+
+        <label for="task2">Task 2:</label>
+        <input type="text" id="task2" name="task2" placeholder="Enter Task 2" required>
+
+        <label for="task2_duration">Duration (hours):</label>
+        <input type="number" id="task2_duration" name="task2_duration" placeholder="Enter Task 2 Duration" min="0" required>
+
+        <label for="task3">Task 3:</label>
+        <input type="text" id="task3" name="task3" placeholder="Enter Task 3" required>
+
+        <label for="task3_duration">Duration (hours):</label>
+        <input type="number" id="task3_duration" name="task3_duration" placeholder="Enter Task 3 Duration" min="0" required>
+
+        <button type="submit">Generate Schedule</button>
+    </form>
+</div>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter Tasks</title>
+</head>
+<body>
+    <h1>Enter Your Tasks</h1>
+    <form action="{{ url_for('generate_schedule') }}" method="POST">
+        <label for="task1">Task 1:</label>
+        <input type="text" id="task1" name="task1" required>
+        <label for="task1_duration">Duration (hours):</label>
+        <input type="number" id="task1_duration" name="task1_duration" min="0" required><br><br>
+
+        <label for="task2">Task 2:</label>
+        <input type="text" id="task2" name="task2">
+        <label for="task2_duration">Duration (hours):</label>
+        <input type="number" id="task2_duration" name="task2_duration" min="0"><br><br>
+
+        <label for="task3">Task 3:</label>
+        <input type="text" id="task3" name="task3">
+        <label for="task3_duration">Duration (hours):</label>
+        <input type="number" id="task3_duration" name="task3_duration" min="0"><br><br>
+
+        <button type="submit">Generate Schedule</button>
+    </form>
+</body>
+</html>

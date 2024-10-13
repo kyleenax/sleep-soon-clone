@@ -1,17 +1,3 @@
-/* Set the body style */
-body {
-    background: url('../images/background.png') repeat; /* Background image */
-    animation: moveBackground 60s linear infinite; /* Animation for moving background */
-    color: white;                /* White text */
-    display: flex;               /* Use Flexbox for centering */
-    flex-direction: column;      /* Stack elements vertically */
-    justify-content: center;     /* Center vertically */
-    align-items: center;         /* Center horizontally */
-    height: 100vh;              /* Full viewport height */
-    margin: 0;                  /* Remove default margin */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;  /* Font style */
-}
-
 /* Animation to move background */
 @keyframes moveBackground {
     from {
@@ -22,32 +8,66 @@ body {
     }
 }
 
-/* Set the heading style */
-h1 {
-    text-transform: uppercase;    /* Make text all caps */
-    font-size: 3em;              /* Adjust font size */
-    margin-bottom: 20px;         /* Space between text and image */
+/* Background container with animation */
+.background-container {
+    background-image: url('../images/background.png'); /* Adjusted path for the background image */
+    background-size: cover; /* Ensure the background covers the entire area */
+    background-position: center; /* Center the background */
+    animation: moveBackground 15s linear infinite; /* Smooth animation, infinite looping */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full height of the viewport */
+    overflow: hidden; /* Hide any overflow */
+}
+
+/* Image container for holding all three images */
+.image-container {
+    display: flex; /* Align images in a row */
+    justify-content: center; /* Center images horizontally */
+    align-items: center; /* Center images vertically */
+    width: 100%; /* Full width for container */
 }
 
 /* Set the image style */
 img {
-    width: 300px;                /* Set desired width for the image */
-    height: auto;                /* Maintain aspect ratio */
+    width: auto; /* Keep width auto to maintain aspect ratio */
+    max-width: 30%; /* Set max width to 30% of the parent container */
+    max-height: 60vh; /* Limit height to 60% of viewport height */
+    margin: 0 5px; /* Space between images */
+    object-fit: contain; /* Maintain aspect ratio without stretching */
 }
 
 /* Set the button style */
 button {
-    margin-top: 20px;            /* Space between image and button */
-    padding: 10px 20px;          /* Button padding */
-    background-color: white;      /* Button background */
-    color: #001f3f;              /* Button text color */
-    border: none;                /* Remove border */
-    border-radius: 5px;         /* Rounded corners */
-    cursor: pointer;             /* Pointer on hover */
-    font-size: 1em;              /* Button font size */
+    margin-top: 10px; /* Space above button */
+    padding: 10px 20px; /* Button padding (more space for a rectangular look) */
+    background-color: rgb(37,41,178); /* Button background */
+    color: #ebebeb; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Rounded corners (increased for a more rectangular shape) */
+    cursor: pointer; /* Pointer on hover */
+    font-size: 1.5em; /* Adjust button font size */
+    width: 200px; /* Fixed width for the button */
+    text-align: center; /* Center the button text */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 /* Change button color on hover */
 button:hover {
-    background-color: #f0f0f0;   /* Light gray on hover */
+    background-color: #e8e8e8; /* Light gray on hover */
+    color: rgb(38, 38, 59); /* Change text color on hover */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    img {
+        max-width: 90vw; /* Adjust max width on smaller screens */
+        max-height: 30vh; /* Limit the height of the image to 30% of the viewport height */
+    }
+    button {
+        font-size: 1.2em; /* Smaller button font size on mobile */
+    }
 }
