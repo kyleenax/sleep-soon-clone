@@ -1,17 +1,3 @@
-/* Set the body style */
-body {
-    background: url('../images/background.png') repeat; /* Background image */
-    animation: moveBackground 60s linear infinite; /* Animation for moving background */
-    color: rgb(255, 255, 255);                /* White text */
-    display: flex;               /* Use Flexbox for centering */
-    flex-direction: column;      /* Stack elements vertically */
-    justify-content: center;     /* Center vertically */
-    align-items: center;         /* Center horizontally */
-    height: 100vh;              /* Full viewport height */
-    margin: 0;                  /* Remove default margin */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;  /* Font style */
-}
-
 /* Animation to move background */
 @keyframes moveBackground {
     from {
@@ -22,59 +8,66 @@ body {
     }
 }
 
-/* Set the heading style for the arched title */
-#curved-title {
-    display: flex; /* Use flexbox for alignment */
-    justify-content: center; /* Center the title */
-    font-size: 12em; /* Adjust font size */
-    margin-bottom: 20px; /* Space between title and image */
-    position: relative; /* For absolute positioning of spans */
-    color: rgb(32, 34, 56); /* Set text color to white */
-    text-transform: uppercase; /* Make text all caps */
-    text-shadow: 0 2px 0 rgba(143, 128, 128, 0.5), 
-                 0 4px 0 rgba(49, 46, 46, 0.4),
-                 0 6px 0 rgba(4, 4, 4, 0.3); /* Add text shadow */
+/* Background container with animation */
+.background-container {
+    background-image: url('../images/background.png'); /* Adjusted path for the background image */
+    background-size: cover; /* Ensure the background covers the entire area */
+    background-position: center; /* Center the background */
+    animation: moveBackground 15s linear infinite; /* Smooth animation, infinite looping */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full height of the viewport */
+    overflow: hidden; /* Hide any overflow */
 }
 
-/* Apply rotation for each letter */
-#curved-title span {
-    display: inline-block; /* Allow rotation */
+/* Image container for holding all three images */
+.image-container {
+    display: flex; /* Align images in a row */
+    justify-content: center; /* Center images horizontally */
+    align-items: center; /* Center images vertically */
+    width: 100%; /* Full width for container */
 }
-
-/* Individual rotation for each letter to create an arch effect */
-#curved-title span:nth-child(1) { transform: rotate(-20deg); }
-#curved-title span:nth-child(2) { transform: rotate(-15deg); }
-#curved-title span:nth-child(3) { transform: rotate(-10deg); }
-#curved-title span:nth-child(4) { transform: rotate(-5deg); }
-#curved-title span:nth-child(5) { transform: rotate(0deg); }
-#curved-title span:nth-child(6) { transform: rotate(5deg); }
-#curved-title span:nth-child(7) { transform: rotate(10deg); }
-#curved-title span:nth-child(8) { transform: rotate(15deg); }
-#curved-title span:nth-child(9) { transform: rotate(20deg); }
-#curved-title span:nth-child(10) { transform: rotate(25deg); }
-#curved-title span:nth-child(11) { transform: rotate(30deg); }
 
 /* Set the image style */
 img {
-    height: 200px;                /* Set desired width for the image */
-    width: auto;                /* Maintain aspect ratio */
+    width: auto; /* Keep width auto to maintain aspect ratio */
+    max-width: 30%; /* Set max width to 30% of the parent container */
+    max-height: 60vh; /* Limit height to 60% of viewport height */
+    margin: 0 5px; /* Space between images */
+    object-fit: contain; /* Maintain aspect ratio without stretching */
 }
 
 /* Set the button style */
 button {
-    margin-top: 20px;            /* Space between image and button */
-    padding: 15px 25px;          /* Button padding */
-    background-color: rgb(38, 38, 59);      /* Button background */
-    color: #ebebeb;              /* Button text color */
-    border: none;                /* Remove border */
-    border-radius: 5px;         /* Rounded corners */
-    cursor: pointer;             /* Pointer on hover */
-    font-size: 3.5em;              /* Button font size */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    text-transform: uppercase;
+    margin-top: 10px; /* Space above button */
+    padding: 10px 20px; /* Button padding (more space for a rectangular look) */
+    background-color: rgb(37,41,178); /* Button background */
+    color: #ebebeb; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Rounded corners (increased for a more rectangular shape) */
+    cursor: pointer; /* Pointer on hover */
+    font-size: 1.5em; /* Adjust button font size */
+    width: 200px; /* Fixed width for the button */
+    text-align: center; /* Center the button text */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 /* Change button color on hover */
 button:hover {
-    background-color: #e8e8e8;   /* Light gray on hover */
+    background-color: #e8e8e8; /* Light gray on hover */
+    color: rgb(38, 38, 59); /* Change text color on hover */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    img {
+        max-width: 90vw; /* Adjust max width on smaller screens */
+        max-height: 30vh; /* Limit the height of the image to 30% of the viewport height */
+    }
+    button {
+        font-size: 1.2em; /* Smaller button font size on mobile */
+    }
 }
