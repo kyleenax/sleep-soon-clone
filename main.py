@@ -43,30 +43,16 @@ def tasks():
 @app.route('/generate_schedule', methods=['POST'])
 def generate_schedule():
     try:
-<<<<<<< Updated upstream
         sleep_hours = session.get('sleep_hours', 0)  # Default to 0 if not set
         start_time = session.get('start_time', '00:00')  # Default to '00:00' if not set
         tasks = []
         total_duration = sleep_hours
-=======
-        # Retrieve task inputs from the form
-        tasks = []
-        index = 1
-        while f'task{index}' in request.form:
-            task_name = request.form.get(f'task{index}')
-            task_duration = int(request.form.get(f'task{index}_duration'))
-            if task_duration < 0:
-                return "Durations must be positive.", 400
-            tasks.append({"name": task_name, "duration": task_duration})
-            index += 1
->>>>>>> Stashed changes
 
         # Loop through task inputs to collect names and durations
         for i in range(1, 10):  # Assuming a max of 9 tasks
             task_name = request.form.get(f'task{i}')
             task_duration = request.form.get(f'task{i}_duration')
 
-<<<<<<< Updated upstream
             if task_name and task_duration:
                 try:
                     task_duration = int(task_duration)
@@ -106,25 +92,6 @@ def generate_schedule():
                 "duration": task_duration
             })
             current_time = task_end_hour
-=======
-        # Ensure the total time doesn't exceed 24 hours
-        total_task_time = sum(task['duration'] for task in tasks)
-        total_time = total_task_time + sleep_hours
-        if total_time > 24:
-            return "The total duration of tasks and sleep cannot exceed 24 hours.", 400
-
-        # Generate the schedule and render it on the HTML page
-        schedule = [
-            {"name": "Sleep", "start": "00:00", "end": f"{sleep_hours:02}:00", "duration": sleep_hours}
-        ]
-        current_time = sleep_hours
-
-        for task in tasks:
-            start_time = current_time
-            end_time = current_time + task['duration']
-            schedule.append({"name": task['name'], "start": f"{start_time:02}:00", "end": f"{end_time:02}:00", "duration": task['duration']})
-            current_time = end_time
->>>>>>> Stashed changes
 
         return render_template('schedule.html', schedule=schedule)
 
@@ -133,4 +100,3 @@ def generate_schedule():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
