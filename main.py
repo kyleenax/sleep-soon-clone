@@ -52,7 +52,7 @@ def generate_schedule():
         # List of mental health activities
         activities = ['meditate', 'yoga', 'walk', 'eat', 'drink water', 'nap', 'HIIT']
 
-        # Loop through task inputs to collect names and durations
+        # Collect task inputs
         for i in range(1, 10):  # Assuming a max of 9 tasks
             task_name = request.form.get(f'task{i}')
             task_duration = request.form.get(f'task{i}_duration')
@@ -67,22 +67,24 @@ def generate_schedule():
                 except ValueError:
                     return "Invalid task duration. Please enter a valid number.", 400
 
-        # Ensure that tasks and breaks do not exceed 24 hours
-        total_break_time = (len(tasks) - 1) * 0.25  # 15-minute break between each task except the last one
+        # Include breaks between tasks, but not after the last one
+        total_break_time = (len(tasks) - 1) * 0.25  # 15-minute break between tasks
         total_duration += total_break_time
 
-        # Calculate remaining hours available for sleep
-        available_time_for_sleep = 24 - total_duration
-        if sleep_hours > available_time_for_sleep:
-            return "The total duration of tasks, sleep, and breaks cannot exceed 24 hours.", 400
+        # Check if the total task and break time exceeds the time before sleep (9:00 PM)
+        # From the start time until 21:00 (9:00 PM), we have this much time available for tasks
+        max_available_time_for_tasks = (21 - int(start_time.split(':')[0]))  # Time until 9 PM
 
-        # Generate the schedule
+        if total_duration > max_available_time_for_tasks:
+            return "The total duration of tasks and breaks exceeds the time available before sleep at 9:00 PM.", 400
+
+        # Generate the schedule with tasks before sleep
         schedule = []
         start_hour, start_minute = map(int, start_time.split(':'))
         current_time_hour = start_hour
         current_time_minute = start_minute
 
-        # Add tasks to schedule, including 15-minute breaks with mental health suggestions
+        # Add tasks to the schedule, including 15-minute breaks with mental health suggestions
         for index, (task_name, task_duration) in enumerate(tasks):
             task_end_hour = (current_time_hour + task_duration) % 24
             schedule.append({
@@ -93,13 +95,14 @@ def generate_schedule():
             })
             current_time_hour = task_end_hour
 
-            # Add a 15-minute break with a random mental health suggestion, except for the last task
+            # Add 15-minute break, except for the last task
             if index < len(tasks) - 1:
+                current_time_minute += 15
                 if current_time_minute >= 60:
                     current_time_hour = (current_time_hour + 1) % 24
-                    current_time_minute = current_time_minute % 60
+                    current_time_minute %= 60
 
-                # Choose a random activity
+                # Choose a random mental health activity for the break
                 activity = random.choice(activities)
 
                 schedule.append({
@@ -112,14 +115,18 @@ def generate_schedule():
                 current_time_minute = (current_time_minute + 15) % 60
                 if current_time_minute >= 60:
                     current_time_hour = (current_time_hour + 1) % 24
-                    current_time_minute = current_time_minute % 60
+                    current_time_minute %= 60
 
-        # Now add sleep as the last thing
-        sleep_end_hour = (current_time_hour + sleep_hours) % 24
+        # Force sleep time between 9 PM and 11 PM
+        sleep_start_hour = 21  # Sleep starts at 9 PM (21:00)
+        sleep_end_hour = (sleep_start_hour + sleep_hours) % 24
+        if sleep_end_hour > 23:
+            return "Sleep must end before 11:00 PM.", 400  # Sleep cannot extend beyond 11 PM
+
         schedule.append({
             "name": "Sleep",
-            "start": f"{current_time_hour:02}:{current_time_minute:02}",
-            "end": f"{sleep_end_hour:02}:{current_time_minute:02}",
+            "start": f"{sleep_start_hour:02}:00",
+            "end": f"{sleep_end_hour:02}:00",
             "duration": sleep_hours
         })
 
