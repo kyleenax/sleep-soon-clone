@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter Sleep Hours</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Your Sleep Hours</h1>
+
+        <!-- Display the message only if it's provided -->
+        {% if message %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <form action="{{ url_for('tasks') }}" method="POST">
+            <div class="form-group">
+                <label for="sleep">Sleep Hours (between 6 and 12):</label>
+                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12">
+            </div>
+            <div class="form-group">
+                <label for="start_time">Start Time (HH:MM):</label>
+                <input type="text" id="start_time" name="start_time" class="form-control" placeholder="e.g., 07:30" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
