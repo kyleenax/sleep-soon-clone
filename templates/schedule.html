@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,12 +16,12 @@
 <body>
     <div class="container">
         <h1>Your Daily Schedule</h1>
-        
+
         <!-- Progress Bar -->
-        <div class="progress">
+        <!-- <div class="progress">
             <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
         </div>
-        
+
         <table class="table mt-4">
             <thead>
                 <tr>
@@ -46,7 +46,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        
+
         <a href="{{ url_for('sleep') }}" class="btn btn-primary">Go Back</a>
     </div>
 
@@ -61,6 +61,146 @@
             progressBar.style.width = progressPercentage + '%';
             progressBar.setAttribute('aria-valuenow', progressPercentage);
             progressBar.textContent = Math.round(progressPercentage) + '%';
+        }
+    </script>
+</body>
+</html> --> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Schedule</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .progress {
+            height: 30px;
+        }
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        .celebration-message {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+            text-align: center;
+            margin-top: 20px;
+            z-index: 1000; /* Ensure the message is above the GIFs */
+        }
+        .gif-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Ensures the GIFs don’t interfere with interaction */
+            z-index: 999; /* Keep GIFs behind text but visible */
+        }
+        .gif-container img {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            animation: float 10s linear infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(50px, 50px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Daily Schedule</h1>
+
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration (hours)</th>
+                    <th>Complete</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+                {% for item in schedule %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.start }}</td>
+                    <td>{{ item.end }}</td>
+                    <td>{{ item.duration }}</td>
+                    <td>
+                        <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Celebration Message -->
+        <div id="celebrationMessage" class="celebration-message">🎉 Congratulations! You've completed all tasks! 🎉</div>
+
+        <!-- Container for celebration GIFs -->
+        <div id="gifContainer" class="gif-container"></div>
+
+        <a href="{{ url_for('sleep') }}" class="btn btn-primary">Go Back</a>
+    </div>
+
+    <script>
+        function updateProgress(checkbox) {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const totalTasks = checkboxes.length;
+            const completedTasks = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+            const progressPercentage = (completedTasks / totalTasks) * 100;
+
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+            progressBar.textContent = Math.round(progressPercentage) + '%';
+
+            // Trigger celebration if all tasks are complete
+            if (progressPercentage === 100) {
+                showCelebration();
+            } else {
+                hideCelebration();
+            }
+        }
+
+        function showCelebration() {
+            const celebrationMessage = document.getElementById('celebrationMessage');
+            celebrationMessage.style.display = 'block'; // Show the congratulation message
+
+            // Generate multiple GIFs floating across the screen
+            const gifContainer = document.getElementById('gifContainer');
+            gifContainer.innerHTML = ''; // Clear any existing GIFs
+
+            for (let i = 0; i < 20; i++) { // Create 20 GIFs
+                const gif = document.createElement('img');
+                gif.src = 'https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif'; // Replace with desired GIF URL
+                gif.style.top = Math.random() * 100 + 'vh'; // Random vertical position
+                gif.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                gifContainer.appendChild(gif);
+            }
+        }
+
+        function hideCelebration() {
+            const celebrationMessage = document.getElementById('celebrationMessage');
+            celebrationMessage.style.display = 'none'; // Hide the congratulation message
+
+            const gifContainer = document.getElementById('gifContainer');
+            gifContainer.innerHTML = ''; // Remove all GIFs
         }
     </script>
 </body>
