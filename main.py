@@ -50,32 +50,18 @@ def generate_schedule():
         if total_time > 24:
             return "The total duration of tasks and sleep cannot exceed 24 hours.", 400
 
-        # Generate the schedule
-        schedule = f"<strong>Schedule for the Day:</strong><br>"
-        current_time = 0  # Start at midnight
+        # Generate the schedule and render it on the HTML page
+        schedule = [
+            {"name": "Sleep", "start": "00:00", "end": f"{sleep_hours:02}:00", "duration": sleep_hours},
+            {"name": task1_name, "start": f"{sleep_hours:02}:00", "end": f"{sleep_hours + task1_duration:02}:00", "duration": task1_duration},
+            {"name": task2_name, "start": f"{sleep_hours + task1_duration:02}:00", "end": f"{sleep_hours + task1_duration + task2_duration:02}:00", "duration": task2_duration},
+            {"name": task3_name, "start": f"{sleep_hours + task1_duration + task2_duration:02}:00", "end": f"{sleep_hours + task1_duration + task2_duration + task3_duration:02}:00", "duration": task3_duration},
+        ]
 
-        # Sleep block
-        sleep_end_time = current_time + sleep_hours
-        schedule += f"Sleep: 00:00 to {sleep_end_time:02}:00 ({sleep_hours} hours)<br>"
-        current_time = sleep_end_time
-
-        # Task 1 block
-        task1_end_time = current_time + task1_duration
-        schedule += f"{task1_name}: {current_time:02}:00 to {task1_end_time:02}:00 ({task1_duration} hours)<br>"
-        current_time = task1_end_time
-
-        # Task 2 block
-        task2_end_time = current_time + task2_duration
-        schedule += f"{task2_name}: {current_time:02}:00 to {task2_end_time:02}:00 ({task2_duration} hours)<br>"
-        current_time = task2_end_time
-
-        # Task 3 block
-        task3_end_time = current_time + task3_duration
-        schedule += f"{task3_name}: {current_time:02}:00 to {task3_end_time:02}:00 ({task3_duration} hours)<br>"
-
-        return schedule
+        return render_template('schedule.html', schedule=schedule)
     except ValueError:
         return "Invalid input. Please enter valid task durations.", 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
