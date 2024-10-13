@@ -1,0 +1,32 @@
+body {
+    background-color: #f7f9fc; /* Light background color */
+    font-family: 'Poppins', sans-serif; /* Use the selected font */
+}
+
+.card {
+    border-radius: 15px; /* Rounded corners */
+    background-color: #ffffff; /* White background for card */
+}
+
+h1 {
+    color: #333333; /* Dark text for title */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+input[type="number"] {
+    border-radius: 5px; /* Rounded corners for input */
+}
+
+button {
+    border-radius: 5px; /* Rounded corners for button */
+    padding: 10px; /* Space inside button */
+}
+
+.btn-primary {
+    background-color: rgb(37,41,178); /* Custom button color */
+    border: none; /* No border */
+}
+
+.btn-primary:hover {
+    background-color: #0b1d30; /* Darker shade on hover */
+}

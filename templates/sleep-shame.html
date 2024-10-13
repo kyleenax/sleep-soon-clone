@@ -17,7 +17,7 @@
             background-size: cover;
             background-position: center;
             font-family: 'Courier New', Courier, monospace; /* Match font style */
-            color: rgb(37,41,178); /* Change text color to dark blue */
+            color: #003366; /* Change text color to dark blue */
         }
 
         .container {
@@ -63,30 +63,23 @@
             background-color: #e8e8e8; /* Light gray on hover */
             color: rgb(38, 38, 59); /* Change text color on hover */
         }
-
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 768px) {
-            button {
-                font-size: 1.2em; /* Smaller button font size on mobile */
-                width: 150px; /* Adjust button width on smaller screens */
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Enter Goal Amount of Sleep!</h1>
+        <h1>Enter Your Sleep Hours</h1>
+
+        <!-- Display the message only if it's provided -->
+        {% if message %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+
         <form action="{{ url_for('tasks') }}" method="POST">
             <div class="form-group">
                 <label for="sleep">Sleep Hours (between 6 and 12):</label>
-                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12" placeholder="How many hours of sleep do you want?" value="{{ sleep }}">
+                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12" placeholder="How many hours of sleep do you want?">
             </div>
             <div class="form-group">
-                <label for="start_time">Start Time (HH:MM):</label>
-                <input type="time" id="start_time" name="start_time" class="form-control" required placeholder="e.g., 07:30" value="{{ start_time }}">
-            </div>
-            <button type="submit" class="btn btn-primary">Next</button>
-        </form>
-    </div>
-</body>
-</html>
+            

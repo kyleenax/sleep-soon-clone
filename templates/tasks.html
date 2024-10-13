@@ -1,65 +1,148 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Tasks</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles to match the theme */
+        body {
+            margin: 0;
+            height: 100vh; /* Full height of the viewport */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('../images/background.png'); /* Use the same background image */
+            background-size: cover;
+            background-position: center;
+            font-family: 'Courier New', Courier, monospace; /* Match font style */
+            color: #003366; /* Dark blue text color */
+        }
+
+        .container {
+            background-color: rgba(220, 227, 247, 0.8); /* Light background with some transparency */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Add padding */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            text-align: center; /* Center the text */
+        }
+
+        h1 {
+            font-weight: bold; /* Make the title bold */
+            font-size: 2em; /* Increase font size for the title */
+            color: #003366; /* Dark blue color for the title */
+        }
+
+        label {
+            display: block; /* Ensure labels are on their own line */
+            margin-top: 10px; /* Spacing above labels */
+            color: #003366; /* Dark blue color for labels */
+        }
+
+        .form-control {
+            margin-top: 10px; /* Space above inputs */
+            font-family: 'Courier New', Courier, monospace; /* Match input font */
+            border-radius: 20px; /* Rounded corners for input fields */
+            border: 1px solid rgb(37,41,178); /* Blue border color for input fields */
+            padding: 10px; /* Padding for a better look */
+        }
+
+        /* Style for the buttons */
+        button {
+            margin-top: 10px; /* Space above button */
+            padding: 10px 20px; /* Button padding */
+            background-color: rgb(37,41,178); /* Button background */
+            color: #ebebeb; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 20px; /* Rounded corners */
+            cursor: pointer; /* Pointer on hover */
+            font-size: 1.5em; /* Button font size */
+            width: 100%; /* Full width for buttons */
+            text-align: center; /* Center button text */
+            font-family: 'Courier New', Courier, monospace; /* Match button font */
+            font-weight: bold; /* Bold text */
+        }
+
+        /* Change button color on hover */
+        button:hover {
+            background-color: #e8e8e8; /* Light gray on hover */
+            color: rgb(38, 38, 59); /* Change text color on hover */
+        }
+
+        /* Danger button for removing tasks */
+        .btn-danger {
+            background-color: #dc3545; /* Danger button color */
+            color: white; /* White text for danger button */
+            margin-top: 10px;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .error-message {
+            color: #dc3545; /* Red color for error messages */
+            margin-bottom: 20px; /* Spacing below the error message */
+        }
+    </style>
+
+    <script>
+        function addTask() {
+            const taskContainer = document.getElementById('taskContainer');
+            const taskCount = taskContainer.children.length + 1;
+
+            const newTask = `
+                <div class="form-group">
+                    <label for="task${taskCount}">Task ${taskCount}:</label>
+                    <input type="text" name="task${taskCount}" class="form-control" required>
+                    <label for="task${taskCount}_duration">Duration (hours):</label>
+                    <input type="number" name="task${taskCount}_duration" class="form-control" required min="0">
+                    <button type="button" class="btn btn-danger" onclick="removeTask(this)">Remove</button>
+                </div>
+            `;
+
+            // Add the new task to the task container
+            taskContainer.insertAdjacentHTML('beforeend', newTask);
+        }
+
+        function removeTask(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </head>
 <body>
 
 <div class="container">
     <h1>Enter Your Tasks</h1>
-    <form action="/generate" method="POST">
-        <label for="task1">Task 1:</label>
-        <input type="text" id="task1" name="task1" placeholder="Enter Task 1" required>
 
-        <label for="task1_duration">Duration (hours):</label>
-        <input type="number" id="task1_duration" name="task1_duration" placeholder="Enter Task 1 Duration" min="0" required>
+    <!-- Display error message if exists -->
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
 
-        <label for="task2">Task 2:</label>
-        <input type="text" id="task2" name="task2" placeholder="Enter Task 2" required>
-
-        <label for="task2_duration">Duration (hours):</label>
-        <input type="number" id="task2_duration" name="task2_duration" placeholder="Enter Task 2 Duration" min="0" required>
-
-        <label for="task3">Task 3:</label>
-        <input type="text" id="task3" name="task3" placeholder="Enter Task 3" required>
-
-        <label for="task3_duration">Duration (hours):</label>
-        <input type="number" id="task3_duration" name="task3_duration" placeholder="Enter Task 3 Duration" min="0" required>
-
-        <button type="submit">Generate Schedule</button>
+    <form action="{{ url_for('generate_schedule') }}" method="POST">
+        <div id="taskContainer" class="mb-3">
+            {% for task in tasks %}
+                <div class="form-group">
+                    <label for="task{{ loop.index }}">Task {{ loop.index }}:</label>
+                    <input type="text" name="task{{ loop.index }}" class="form-control" value="{{ task[0] }}" required>
+                    <label for="task{{ loop.index }}_duration">Duration (hours):</label>
+                    <input type="number" name="task{{ loop.index }}_duration" class="form-control" value="{{ task[1] }}" required min="0">
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label for="task1">Task 1:</label>
+                    <input type="text" name="task1" class="form-control" required>
+                    <label for="task1_duration">Duration (hours):</label>
+                    <input type="number" name="task1_duration" class="form-control" required min="0">
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addTask()">Add Another Task</button><br><br>
+        <button type="submit" class="btn btn-success">Generate Schedule</button>
     </form>
 </div>
 
-</body>
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Enter Tasks</title>
-</head>
-<body>
-    <h1>Enter Your Tasks</h1>
-    <form action="{{ url_for('generate_schedule') }}" method="POST">
-        <label for="task1">Task 1:</label>
-        <input type="text" id="task1" name="task1" required>
-        <label for="task1_duration">Duration (hours):</label>
-        <input type="number" id="task1_duration" name="task1_duration" min="0" required><br><br>
-
-        <label for="task2">Task 2:</label>
-        <input type="text" id="task2" name="task2">
-        <label for="task2_duration">Duration (hours):</label>
-        <input type="number" id="task2_duration" name="task2_duration" min="0"><br><br>
-
-        <label for="task3">Task 3:</label>
-        <input type="text" id="task3" name="task3">
-        <label for="task3_duration">Duration (hours):</label>
-        <input type="number" id="task3_duration" name="task3_duration" min="0"><br><br>
-
-        <button type="submit">Generate Schedule</button>
-    </form>
 </body>
 </html>

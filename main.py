@@ -14,67 +14,195 @@ def sleep():
     return render_template('sleep.html')
 
 # Route to handle sleep hours submission and move to task entry
+# @app.route('/tasks', methods=['POST'])
+# def tasks():
+#     sleep_hours = request.form.get('sleep')
+#     start_time = request.form.get('start_time')
+
+#     # Validate sleep hours (must be a non-negative number)
+#     if sleep_hours and sleep_hours.isdigit() and int(sleep_hours) >= 0:
+#         session['sleep_hours'] = int(sleep_hours)  # Store sleep hours in session
+
+#         # Validate start time format (should be a valid time in HH:MM format)
+#         if start_time:
+#             try:
+#                 hours, minutes = map(int, start_time.split(':'))
+#                 if 0 <= hours < 24 and 0 <= minutes < 60:
+#                     session['start_time'] = start_time  # Store start time in session
+#                     return render_template('tasks.html')  # Render the task entry page
+#                 else:
+#                     return "Invalid start time. Please enter a valid time in HH:MM format.", 400
+#             except ValueError:
+#                 return "Invalid start time. Please enter a valid time in HH:MM format.", 400
+#         else:
+#             return "Start time is required.", 400
+#     else:
+#         return "Please enter a valid sleep duration.", 400
 @app.route('/tasks', methods=['POST'])
 def tasks():
     sleep_hours = request.form.get('sleep')
+    start_time = request.form.get('start_time')
 
-    # Validate sleep hours (must be a non-negative number)
-    if sleep_hours.isdigit() and int(sleep_hours) >= 0:
-        session['sleep_hours'] = int(sleep_hours)  # Store sleep hours in session
-        return render_template('tasks.html')  # Render the task entry page
+    # Validate sleep hours (must be between 6 and 12 hours)
+    if sleep_hours and sleep_hours.isdigit():
+        sleep_hours = int(sleep_hours)
+        if 6 <= sleep_hours <= 12:
+            session['sleep_hours'] = sleep_hours  # Store sleep hours in session
+
+            # Validate start time format (should be a valid time in HH:MM format)
+            if start_time:
+                try:
+                    hours, minutes = map(int, start_time.split(':'))
+                    if 0 <= hours < 24 and 0 <= minutes < 60:
+                        session['start_time'] = start_time  # Store start time in session
+                        return render_template('tasks.html')  # Render the task entry page
+                    else:
+                        return render_template('sleep.html', message="Invalid start time. Please enter a valid time in HH:MM format.", sleep=sleep_hours, start_time=start_time)
+                except ValueError:
+                    return render_template('sleep.html', message="Invalid start time. Please enter a valid time in HH:MM format.", sleep=sleep_hours, start_time=start_time)
+            else:
+                return render_template('sleep.html', message="Start time is required.", sleep=sleep_hours, start_time=start_time)
+        else:
+            # Encourage a healthy sleep duration between 6 and 12 hours
+            return render_template('sleep.html', message="Please enter a healthy sleep duration between 6 and 12 hours.", sleep=sleep_hours, start_time=start_time)
     else:
-        return "Please enter a valid sleep duration.", 400
+        return render_template('sleep.html', message="Please enter a valid sleep duration between 6 and 12 hours.", sleep=sleep_hours, start_time=start_time)
 
-# Route to generate the schedule after task entry
+# @app.route('/tasks', methods=['POST']) KYLEENAAAASSS
+# def tasks():
+#     sleep_hours = request.form.get('sleep')  # Retrieve sleep hours from form
+#     start_time = request.form.get('start_time')  # Retrieve start time from form
+
+#     try:
+#         # Convert sleep hours to a float to handle decimal entries
+#         sleep_hours = float(sleep_hours)
+
+#         # Check if sleep hours are within the valid range
+#         if sleep_hours > 11:
+#             return render_template('sleep.html', error="Sleep hours cannot exceed 12. Please enter a valid value.")
+#         if sleep_hours < 7:
+#             return render_template('sleep.html', error="Sleep hours cannot be below 6. Please enter a valid value.")
+
+#         # Store valid sleep hours in the session
+#         session['sleep_hours'] = sleep_hours
+
+#         # Validate start time format
+#         if start_time:
+#             try:
+#                 hours, minutes = map(int, start_time.split(':'))
+#                 if 0 <= hours < 24 and 0 <= minutes < 60:
+#                     session['start_time'] = start_time  # Store start time in session
+#                     return redirect(url_for('task_entry'))  # Correctly redirect to the task entry page
+#                 else:
+#                     return render_template('sleep.html', error="Invalid start time. Please enter a valid time in HH:MM format.")
+#             except ValueError:
+#                 return render_template('sleep.html', error="Invalid start time. Please enter a valid time in HH:MM format.")
+#         else:
+#             return render_template('sleep.html', error="Start time is required.")
+
+#     except ValueError:
+#         return render_template('sleep.html', error="Invalid input for sleep hours. Please enter a number.")
+import random
+@app.route('/task_entry')
+def task_entry():
+    # Clear session values to reset inputs
+    session.pop('sleep_hours', None)
+    session.pop('start_time', None)
+    return render_template('tasks.html')  # Ensure you create this template
 @app.route('/generate_schedule', methods=['POST'])
 def generate_schedule():
     try:
-        # Retrieve task inputs from the form
-        task1_name = request.form['task1']
-        task1_duration = int(request.form['task1_duration'])
-        task2_name = request.form['task2']
-        task2_duration = int(request.form['task2_duration'])
-        task3_name = request.form['task3']
-        task3_duration = int(request.form['task3_duration'])
+        sleep_hours = session.get('sleep_hours', 0)  # Default to 0 if not set
+        start_time = session.get('start_time', '00:00')  # Default to '00:00' if not set
+        tasks = []
+        total_duration = 0  # We calculate total duration of tasks first
 
-        # Get sleep hours from session
-        sleep_hours = session.get('sleep_hours')
+        # List of mental health activities
+        activities = ['meditate', 'yoga', 'walk', 'eat', 'drink water', 'nap', 'HIIT']
 
-        # Validate task durations (must be positive numbers)
-        if task1_duration < 0 or task2_duration < 0 or task3_duration < 0:
-            return "Durations must be positive.", 400
+        # Collect task inputs
+        for i in range(1, 10):  # Assuming a max of 9 tasks
+            task_name = request.form.get(f'task{i}')
+            task_duration = request.form.get(f'task{i}_duration')
 
-        # Ensure the total time doesn't exceed 24 hours
-        total_time = task1_duration + task2_duration + task3_duration + sleep_hours
-        if total_time > 24:
-            return "The total duration of tasks and sleep cannot exceed 24 hours.", 400
+            if task_name and task_duration:
+                try:
+                    task_duration = int(task_duration)
+                    if task_duration < 0:
+                        return render_template('tasks.html', error="Durations must be positive.", tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400
+                    tasks.append((task_name, task_duration))
+                    total_duration += task_duration
+                except ValueError:
+                    return render_template('tasks.html', error="Invalid task duration. Please enter a valid number.", tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400
 
-        # Generate the schedule
-        schedule = f"<strong>Schedule for the Day:</strong><br>"
-        current_time = 0  # Start at midnight
+        # Include breaks between tasks, but not after the last one
+        total_break_time = (len(tasks) - 1) * 0.25  # 15-minute break between tasks
+        total_duration += total_break_time
 
-        # Sleep block
-        sleep_end_time = current_time + sleep_hours
-        schedule += f"Sleep: 00:00 to {sleep_end_time:02}:00 ({sleep_hours} hours)<br>"
-        current_time = sleep_end_time
+        # Check if the total task and break time exceeds the time before sleep (9:00 PM)
+        max_available_time_for_tasks = (21 - int(start_time.split(':')[0]))  # Time until 9 PM
 
-        # Task 1 block
-        task1_end_time = current_time + task1_duration
-        schedule += f"{task1_name}: {current_time:02}:00 to {task1_end_time:02}:00 ({task1_duration} hours)<br>"
-        current_time = task1_end_time
+        if total_duration > max_available_time_for_tasks:
+            # Render the tasks page with an error message
+            error_message = "The total duration of tasks and breaks exceeds the time available before sleep at 9:00 PM."
+            return render_template('tasks.html', error=error_message, tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400
 
-        # Task 2 block
-        task2_end_time = current_time + task2_duration
-        schedule += f"{task2_name}: {current_time:02}:00 to {task2_end_time:02}:00 ({task2_duration} hours)<br>"
-        current_time = task2_end_time
+        # Generate the schedule with tasks before sleep
+        schedule = []
+        start_hour, start_minute = map(int, start_time.split(':'))
+        current_time_hour = start_hour
+        current_time_minute = start_minute
 
-        # Task 3 block
-        task3_end_time = current_time + task3_duration
-        schedule += f"{task3_name}: {current_time:02}:00 to {task3_end_time:02}:00 ({task3_duration} hours)<br>"
+        # Add tasks to the schedule, including 15-minute breaks with mental health suggestions
+        for index, (task_name, task_duration) in enumerate(tasks):
+            task_end_hour = (current_time_hour + task_duration) % 24
+            schedule.append({
+                "name": task_name,
+                "start": f"{current_time_hour:02}:{current_time_minute:02}",
+                "end": f"{task_end_hour:02}:{current_time_minute:02}",
+                "duration": task_duration
+            })
+            current_time_hour = task_end_hour
 
-        return schedule
+            # Add 15-minute break, except for the last task
+            if index < len(tasks) - 1:
+                # current_time_minute += 15
+                if current_time_minute >= 60:
+                    current_time_hour = (current_time_hour + 1) % 24
+                    current_time_minute %= 60
+
+                # Choose a random mental health activity for the break
+                activity = random.choice(activities)
+
+                schedule.append({
+                    "name": f"Break - {activity.capitalize()}",
+                    "start": f"{current_time_hour:02}:{current_time_minute:02}",
+                    "end": f"{current_time_hour:02}:{(current_time_minute + 15) % 60:02}",
+                    "duration": 0.25
+                })
+
+                current_time_minute = (current_time_minute + 15) % 60
+                if current_time_minute >= 60:
+                    current_time_hour = (current_time_hour + 1) % 24
+                    current_time_minute %= 60
+
+        # Force sleep time between 9 PM and 11 PM
+        sleep_start_hour = 21  # Sleep starts at 9 PM (21:00)
+        sleep_end_hour = (sleep_start_hour + sleep_hours) % 24
+        if sleep_end_hour > 23:
+            return render_template('tasks.html', error="Sleep must end before 11:00 PM.", tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400  # Sleep cannot extend beyond 11 PM
+
+        schedule.append({
+            "name": "Sleep",
+            "start": f"{sleep_start_hour:02}:00",
+            "end": f"{sleep_end_hour:02}:00",
+            "duration": sleep_hours
+        })
+
+        return render_template('schedule.html', schedule=schedule)
+
     except ValueError:
-        return "Invalid input. Please enter valid task durations.", 400
+        return render_template('tasks.html', error="Invalid input. Please enter valid task durations.", tasks=tasks, sleep_hours=sleep_hours, start_time=start_time), 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
