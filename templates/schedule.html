@@ -63,7 +63,6 @@
                     <th>Task</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th>Duration (hours)</th>
                     <th>Complete</th>
                 </tr>
             </thead>
@@ -73,14 +72,16 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.start }}</td>
                     <td>{{ item.end }}</td>
-                    <td>{{ item.duration }}</td>
                     <td>
-                        <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                        {% if item.name != "Sleep" %}
+                            <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
 
         <!-- Celebration Message -->
         <div id="celebrationMessage" class="celebration-message">🎉 Congratulations! You've completed all tasks! 🎉</div>
