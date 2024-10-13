@@ -3,14 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule</title>
+    <title>Daily Schedule</title>
+    <style>
+        #progress-bar-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+        }
+    </style>
+    <script>
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const totalTasks = checkboxes.length;
+            let completedTasks = 0;
+
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    completedTasks++;
+                }
+            });
+
+            const progressPercentage = (completedTasks / totalTasks) * 100;
+            document.getElementById('progress-bar').style.width = progressPercentage + '%';
+        }
+    </script>
 </head>
 <body>
+    <h2>Schedule for the Day:</h2>
+    <div>
+        {% for task in schedule %}
+            <input type="checkbox" class="task-checkbox" onclick="updateProgress()"> {{ task.name }}: {{ task.start }} to {{ task.end }} ({{ task.duration }} hours)<br>
+        {% endfor %}
+    </div>
 
-<div class="container">
-    <h1>Your Schedule</h1>
-    <p>{{ schedule }}</p>
-</div>
-
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
 </body>
 </html>
