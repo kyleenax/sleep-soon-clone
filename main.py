@@ -38,38 +38,76 @@ def sleep():
 #             return "Start time is required.", 400
 #     else:
 #         return "Please enter a valid sleep duration.", 400
+# @app.route('/tasks', methods=['POST'])
+# def tasks():
+#     sleep_hours = request.form.get('sleep')
+#     start_time = request.form.get('start_time')
+
+#     # Validate sleep hours (must be between 6 and 12 hours)
+#     if sleep_hours and sleep_hours.isdigit():
+#         sleep_hours = int(sleep_hours)
+#         if 6 <= sleep_hours <= 12:
+#             session['sleep_hours'] = sleep_hours  # Store sleep hours in session
+
+#             # Validate start time format (should be a valid time in HH:MM format)
+#             if start_time:
+#                 try:
+#                     hours, minutes = map(int, start_time.split(':'))
+#                     if 0 <= hours < 24 and 0 <= minutes < 60:
+#                         session['start_time'] = start_time  # Store start time in session
+#                         return render_template('tasks.html')  # Render the task entry page
+#                     else:
+#                         return "Invalid start time. Please enter a valid time in HH:MM format.", 400
+#                 except ValueError:
+#                     return "Invalid start time. Please enter a valid time in HH:MM format.", 400
+#             else:
+#                 return "Start time is required.", 400
+#         else:
+#             # Encourage a healthy sleep duration between 6 and 12 hours
+#             return render_template('sleep-shame.html', message="Please enter a healthy sleep duration between 6 and 12 hours.")
+#     else:
+#         return render_template('sleep-shame.html', message="Please enter a valid sleep duration between 6 and 12 hours.")
 @app.route('/tasks', methods=['POST'])
 def tasks():
-    sleep_hours = request.form.get('sleep')
-    start_time = request.form.get('start_time')
+    sleep_hours = request.form.get('sleep')  # Retrieve sleep hours from form
+    start_time = request.form.get('start_time')  # Retrieve start time from form
 
-    # Validate sleep hours (must be between 6 and 12 hours)
-    if sleep_hours and sleep_hours.isdigit():
-        sleep_hours = int(sleep_hours)
-        if 6 <= sleep_hours <= 12:
-            session['sleep_hours'] = sleep_hours  # Store sleep hours in session
+    try:
+        # Convert sleep hours to a float to handle decimal entries
+        sleep_hours = float(sleep_hours)
 
-            # Validate start time format (should be a valid time in HH:MM format)
-            if start_time:
-                try:
-                    hours, minutes = map(int, start_time.split(':'))
-                    if 0 <= hours < 24 and 0 <= minutes < 60:
-                        session['start_time'] = start_time  # Store start time in session
-                        return render_template('tasks.html')  # Render the task entry page
-                    else:
-                        return "Invalid start time. Please enter a valid time in HH:MM format.", 400
-                except ValueError:
-                    return "Invalid start time. Please enter a valid time in HH:MM format.", 400
-            else:
-                return "Start time is required.", 400
+        # Check if sleep hours are within the valid range
+        if sleep_hours > 11:
+            return render_template('sleep.html', error="Sleep hours cannot exceed 12. Please enter a valid value.")
+        if sleep_hours < 7:
+            return render_template('sleep.html', error="Sleep hours cannot be below 6. Please enter a valid value.")
+
+        # Store valid sleep hours in the session
+        session['sleep_hours'] = sleep_hours
+
+        # Validate start time format
+        if start_time:
+            try:
+                hours, minutes = map(int, start_time.split(':'))
+                if 0 <= hours < 24 and 0 <= minutes < 60:
+                    session['start_time'] = start_time  # Store start time in session
+                    return redirect(url_for('task_entry'))  # Correctly redirect to the task entry page
+                else:
+                    return render_template('sleep.html', error="Invalid start time. Please enter a valid time in HH:MM format.")
+            except ValueError:
+                return render_template('sleep.html', error="Invalid start time. Please enter a valid time in HH:MM format.")
         else:
-            # Encourage a healthy sleep duration between 6 and 12 hours
-            return render_template('sleep-shame.html', message="Please enter a healthy sleep duration between 6 and 12 hours.")
-    else:
-        return render_template('sleep-shame.html', message="Please enter a valid sleep duration between 6 and 12 hours.")
+            return render_template('sleep.html', error="Start time is required.")
 
+    except ValueError:
+        return render_template('sleep.html', error="Invalid input for sleep hours. Please enter a number.")
 import random
-
+@app.route('/task_entry')
+def task_entry():
+    # Clear session values to reset inputs
+    session.pop('sleep_hours', None)
+    session.pop('start_time', None)
+    return render_template('tasks.html')  # Ensure you create this template
 @app.route('/generate_schedule', methods=['POST'])
 def generate_schedule():
     try:
