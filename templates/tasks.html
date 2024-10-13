@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,15 +12,15 @@
 
             const newTask = `
                 <div class="form-group">
-             <label for="task${taskCount}">Task ${taskCount}:</label>
-             <input type="text" name="task${taskCount}" class="form-control" required>
-             <label for="task${taskCount}_duration">Duration (hours):</label>
-             <input type="number" name="task${taskCount}_duration" class="form-control" required min="0">
-             
-             <!-- Remove button with onclick event -->
-             <button type="button" class="btn btn-danger mt-2" onclick="removeTask(this)">Remove</button>
-           </div>
+                    <label for="task${taskCount}">Task ${taskCount}:</label>
+                    <input type="text" name="task${taskCount}" class="form-control" required>
+                    <label for="task${taskCount}_duration">Duration (hours):</label>
+                    <input type="number" name="task${taskCount}_duration" class="form-control" required min="0">
+                    <button type="button" class="btn btn-danger mt-2" onclick="removeTask(this)">Remove</button>
+                </div>
+            `;
 
+            // Add the new task to the task container
             taskContainer.insertAdjacentHTML('beforeend', newTask);
         }
 
