@@ -5,8 +5,21 @@
     <title>Your Schedule</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Set font family */
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+        h1 {
+            color: #003366; /* Title color */
+            text-align: center;
+            margin-top: 20px;
+        }
         .progress {
             height: 30px;
+            background-color: #e9ecef; /* Light progress background */
+        }
+        .progress-bar {
+            background-color: rgb(37, 41, 178); /* Progress bar fill color */
         }
         .task-checkbox {
             margin-right: 10px;
@@ -15,7 +28,7 @@
             display: none;
             font-size: 24px;
             font-weight: bold;
-            color: green;
+            color: rgb(37, 41, 178); /* Celebration message color */
             text-align: center;
             margin-top: 20px;
             z-index: 1000; /* Ensure the message is above the GIFs */
@@ -45,6 +58,24 @@
             100% {
                 transform: translate(0, 0);
             }
+        }
+        table {
+            margin-top: 20px;
+        }
+        th {
+            background-color: #003366; /* Table header background color */
+            color: white; /* Table header text color */
+        }
+        td {
+            color: #003366; /* Table text color */
+        }
+        .btn-primary {
+            background-color: rgb(37, 41, 178); /* Button color */
+            border-color: rgb(37, 41, 178); /* Button border color */
+        }
+        .btn-primary:hover {
+            background-color: #003366; /* Button hover color */
+            border-color: #003366; /* Button border hover color */
         }
     </style>
 </head>
@@ -82,7 +113,6 @@
             </tbody>
         </table>
         
-
         <!-- Celebration Message -->
         <div id="celebrationMessage" class="celebration-message">🎉 Congratulations! You've completed all tasks! 🎉</div>
 

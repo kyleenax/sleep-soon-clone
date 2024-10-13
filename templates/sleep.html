@@ -5,111 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Sleep Hours</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="goal_sleep.css"> <!-- Link to your custom styles -->
+    <style>
+        body {
+            margin: 0;
+            height: 100vh; /* Full height of the viewport */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('../images/background.png'); /* Use the same background image */
+            background-size: cover;
+            background-position: center;
+            font-family: 'Courier New', Courier, monospace; /* Match font style */
+            color: rgb(37,41,178); /* Change text color to dark blue */
+        }
+
+        .container {
+            background-color: rgba(220, 227, 247, 0.8); /* Light background with some transparency */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Add padding */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            text-align: center; /* Center the text */
+        }
+
+        h1 {
+            font-weight: bold; /* Make the title bold */
+            font-size: 2em; /* Increase font size for the title */
+            color: #003366; /* Dark blue color for the title */
+        }
+
+        .form-control {
+            margin-top: 10px; /* Space above inputs */
+            font-family: 'Courier New', Courier, monospace; /* Match input font */
+            border-radius: 20px; /* Rounded corners for input fields */
+            border: 1px solid rgb(37,41,178); /* Blue border color for input fields */
+            padding: 10px; /* Padding for a better look */
+        }
+
+        /* Style for the submit button */
+        button {
+            margin-top: 10px; /* Space above button */
+            padding: 10px 20px; /* Button padding */
+            background-color: rgb(37,41,178); /* Button background */
+            color: #ebebeb; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 20px; /* Rounded corners */
+            cursor: pointer; /* Pointer on hover */
+            font-size: 1.5em; /* Button font size */
+            width: 200px; /* Fixed width for the button */
+            text-align: center; /* Center button text */
+            font-family: 'Courier New', Courier, monospace; /* Match button font */
+            font-weight: bold; /* Bold text */
+        }
+
+        /* Change button color on hover */
+        button:hover {
+            background-color: #e8e8e8; /* Light gray on hover */
+            color: rgb(38, 38, 59); /* Change text color on hover */
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            button {
+                font-size: 1.2em; /* Smaller button font size on mobile */
+                width: 150px; /* Adjust button width on smaller screens */
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Enter Desired Sleep Hours</h1>
-    <form action="/tasks" method="POST">
-        <div class="form-group">
-            <label for="sleep">Desired Sleep (hours):</label>
-            <input type="number" id="sleep" name="sleep" class="form-control" placeholder="Enter Desired Sleep" min="0" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="start-time">Start Time for Task (HH:MM) :</label>
-            <input type="time" id="start-time" name="start_time" class="form-control" required>
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Next</button>
-    </form>
-</div>
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter Sleep Goal</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="goal_sleep.css"> <!-- Link to your style.css -->
-     <!-- <style>
-         Vbody {
-             Vbackground-color: #f0f2f5; /* Keeping the existing background color */
-             Vfont-family: 'Courier New', Courier, monospace;  /* Use Poppins font for the entire body */
-             Vfont-weight: bold;
-         V}
-         V.card {
-             Vbackground-color: #ffffff; /* Card background */
-             Vborder-radius: 8px; /* Rounded corners */
-             Vborder: 1px solid #e0e0e0; /* Subtle border for the card */
-             Vbox-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-         V}
-         Vh1 {
-             Vcolor: #333; /* Header color */
-         V}
-         V.form-control {
-             Vfont-family: 'Courier New', Courier, monospace; /* Poppins font for input fields */
-             Vborder-radius: 4px; /* Rounded corners for input fields */
-             Vborder: 1px solid #007bff; /* Blue border color for input fields */
-             Vfont-weight: bolder;
-         V}
-         V.btn-primary {
-             Vbackground-color: rgb(37,41,178); /* Button color */
-             Vborder-color: #15143c; /* Button border color */
-             Vfont-weight: 600; /* Bold font for button */
-         V}
-         V.btn-primary:hover {
-             Vbackground-color: #0056b3; /* Darker blue on hover */
-             Vborder-color: #0056b3; /* Darker border color on hover */
-         V}
-         V.error {
-             Vcolor: red;
-             Vmargin-top: 10px;
-             Vdisplay: none; /* Hidden by default */
-         V}
-     V</style>
- V</head>
- V<body>
-     V<div class="container d-flex justify-content-center align-items-center min-vh-100">
-         V<div class="card p-4 shadow">
-             V<h1 class="text-center">Set your sleep goal!</h1>
-             V<form id="sleepForm" action="{{ url_for('tasks') }}" method="post">
-                 V<div class="form-group">
-                     V<label for="sleep">Desired Sleep (hours):</label>
-                     V<input type="number" id="sleep" name="sleep" class="form-control" placeholder="Enter Desired Sleep" min="0" required value="">
-                     V<span id="error-message" class="error">Please enter a value between 6 and 12 hours.</span>
-                 V</div>                
-                 V<div class="form-group">
-                     V<label for="start-time">Start Time for Task:</label>
-                     V<input type="time" id="start-time" name="start_time" class="form-control" required>
-                 V</div>
-                 V<button type="submit" class="btn btn-primary btn-block">Next</button>
-             V</form>
-         V</div>
-     V</div>
- V
-     V<script>
-         V// JavaScript for validating the sleep hours input
-         Vdocument.getElementById('sleepForm').addEventListener('submit', function(event) {
-             Vconst sleepInput = document.getElementById('sleep');
-             Vconst errorMessage = document.getElementById('error-message');
- V
-             V// Get the value of the sleep input
-             Vconst sleepHours = parseFloat(sleepInput.value);
- V
-             V// Check if the sleep hours are less than 6 or greater than 12
-             Vif (sleepHours < 7 || sleepHours > 11) {
-                 V// Prevent the form from submitting
-                 Vevent.preventDefault();
- V
-                 V// Show the error message
-                 VerrorMessage.style.display = 'block';
-             V} else {
-                 V// Hide the error message (in case the user corrects their input)
-                 VerrorMessage.style.display = 'none';
-             V}
-         V});
-     V</script>
- V</body>
- V</html> --> 
+    <div class="container">
+        <h1>Enter Goal Amount of Sleep!</h1>
+        <form action="{{ url_for('tasks') }}" method="POST">
+            <div class="form-group">
+                <label for="sleep">Sleep Hours (between 6 and 12):</label>
+                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12" placeholder="How many hours of sleep do you want?" value="{{ sleep }}">
+            </div>
+            <div class="form-group">
+                <label for="start_time">Start Time (HH:MM):</label>
+                <input type="time" id="start_time" name="start_time" class="form-control" required placeholder="e.g., 07:30" value="{{ start_time }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Next</button>
+        </form>
+    </div>
+</body>
+</html>

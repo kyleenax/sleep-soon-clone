@@ -2,8 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Sleep Hours</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="goal_sleep.css"> <!-- Link to your custom styles -->
+    <style>
+        body {
+            margin: 0;
+            height: 100vh; /* Full height of the viewport */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('../images/background.png'); /* Use the same background image */
+            background-size: cover;
+            background-position: center;
+            font-family: 'Courier New', Courier, monospace; /* Match font style */
+            color: #003366; /* Change text color to dark blue */
+        }
+
+        .container {
+            background-color: rgba(220, 227, 247, 0.8); /* Light background with some transparency */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Add padding */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            text-align: center; /* Center the text */
+        }
+
+        h1 {
+            font-weight: bold; /* Make the title bold */
+            font-size: 2em; /* Increase font size for the title */
+            color: #003366; /* Dark blue color for the title */
+        }
+
+        .form-control {
+            margin-top: 10px; /* Space above inputs */
+            font-family: 'Courier New', Courier, monospace; /* Match input font */
+            border-radius: 20px; /* Rounded corners for input fields */
+            border: 1px solid rgb(37,41,178); /* Blue border color for input fields */
+            padding: 10px; /* Padding for a better look */
+        }
+
+        /* Style for the submit button */
+        button {
+            margin-top: 10px; /* Space above button */
+            padding: 10px 20px; /* Button padding */
+            background-color: rgb(37,41,178); /* Button background */
+            color: #ebebeb; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 20px; /* Rounded corners */
+            cursor: pointer; /* Pointer on hover */
+            font-size: 1.5em; /* Button font size */
+            width: 200px; /* Fixed width for the button */
+            text-align: center; /* Center button text */
+            font-family: 'Courier New', Courier, monospace; /* Match button font */
+            font-weight: bold; /* Bold text */
+        }
+
+        /* Change button color on hover */
+        button:hover {
+            background-color: #e8e8e8; /* Light gray on hover */
+            color: rgb(38, 38, 59); /* Change text color on hover */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -19,14 +79,7 @@
         <form action="{{ url_for('tasks') }}" method="POST">
             <div class="form-group">
                 <label for="sleep">Sleep Hours (between 6 and 12):</label>
-                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12">
+                <input type="number" id="sleep" name="sleep" class="form-control" required min="6" max="12" placeholder="How many hours of sleep do you want?">
             </div>
             <div class="form-group">
-                <label for="start_time">Start Time (HH:MM):</label>
-                <input type="time" id="start_time" name="start_time" class="form-control" placeholder="e.g., 07:30" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-</body>
-</html>
+            
