@@ -2,27 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Enter Tasks</title>
+    <title>Task Entry</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function addTask() {
+            const taskContainer = document.getElementById('taskContainer');
+            const taskCount = taskContainer.children.length + 1;
+
+            const newTask = `
+                <div class="form-group">
+             <label for="task${taskCount}">Task ${taskCount}:</label>
+             <input type="text" name="task${taskCount}" class="form-control" required>
+             <label for="task${taskCount}_duration">Duration (hours):</label>
+             <input type="number" name="task${taskCount}_duration" class="form-control" required min="0">
+             
+             <!-- Remove button with onclick event -->
+             <button type="button" class="btn btn-danger mt-2" onclick="removeTask(this)">Remove</button>
+           </div>
+
+            taskContainer.insertAdjacentHTML('beforeend', newTask);
+        }
+
+        function removeTask(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </head>
 <body>
-    <h1>Enter Your Tasks</h1>
-    <form action="{{ url_for('generate_schedule') }}" method="POST">
-        <label for="task1">Task 1:</label>
-        <input type="text" id="task1" name="task1" required>
-        <label for="task1_duration">Duration (hours):</label>
-        <input type="number" id="task1_duration" name="task1_duration" min="0" required><br><br>
-
-        <label for="task2">Task 2:</label>
-        <input type="text" id="task2" name="task2">
-        <label for="task2_duration">Duration (hours):</label>
-        <input type="number" id="task2_duration" name="task2_duration" min="0"><br><br>
-
-        <label for="task3">Task 3:</label>
-        <input type="text" id="task3" name="task3">
-        <label for="task3_duration">Duration (hours):</label>
-        <input type="number" id="task3_duration" name="task3_duration" min="0"><br><br>
-
-        <button type="submit">Generate Schedule</button>
-    </form>
+    <div class="container">
+        <h1>Enter Your Tasks</h1>
+        <form action="{{ url_for('generate_schedule') }}" method="post">
+            <div id="taskContainer" class="mb-3">
+                <div class="form-group">
+                    <label for="task1">Task 1:</label>
+                    <input type="text" name="task1" class="form-control" required>
+                    <label for="task1_duration">Duration (hours):</label>
+                    <input type="number" name="task1_duration" class="form-control" required min="0">
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTask()">Add Another Task</button>
+            <button type="submit" class="btn btn-success">Generate Schedule</button>
+        </form>
+    </div>
 </body>
 </html>

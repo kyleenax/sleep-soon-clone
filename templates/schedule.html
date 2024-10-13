@@ -2,47 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Schedule</title>
+    <title>Your Schedule</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        #progress-bar-container {
-            width: 100%;
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
+        .progress {
+            height: 30px;
         }
-        #progress-bar {
-            width: 0%;
-            height: 20px;
-            background-color: #4caf50;
+        .task-checkbox {
+            margin-right: 10px;
         }
     </style>
-    <script>
-        function updateProgress() {
-            const checkboxes = document.querySelectorAll('.task-checkbox');
-            const totalTasks = checkboxes.length;
-            let completedTasks = 0;
-
-            checkboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    completedTasks++;
-                }
-            });
-
-            const progressPercentage = (completedTasks / totalTasks) * 100;
-            document.getElementById('progress-bar').style.width = progressPercentage + '%';
-        }
-    </script>
 </head>
 <body>
-    <h2>Schedule for the Day:</h2>
-    <div>
-        {% for task in schedule %}
-            <input type="checkbox" class="task-checkbox" onclick="updateProgress()"> {{ task.name }}: {{ task.start }} to {{ task.end }} ({{ task.duration }} hours)<br>
-        {% endfor %}
+    <div class="container">
+        <h1>Your Daily Schedule</h1>
+        
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+        
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration (hours)</th>
+                    <th>Complete</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+                {% for item in schedule %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.start }}</td>
+                    <td>{{ item.end }}</td>
+                    <td>{{ item.duration }}</td>
+                    <td>
+                        <input type="checkbox" class="task-checkbox" onclick="updateProgress(this)" />
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href="{{ url_for('sleep') }}" class="btn btn-primary">Go Back</a>
     </div>
 
-    <div id="progress-bar-container">
-        <div id="progress-bar"></div>
-    </div>
+    <script>
+        function updateProgress(checkbox) {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const totalTasks = checkboxes.length;
+            const completedTasks = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+            const progressPercentage = (completedTasks / totalTasks) * 100;
+
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+            progressBar.textContent = Math.round(progressPercentage) + '%';
+        }
+    </script>
 </body>
 </html>

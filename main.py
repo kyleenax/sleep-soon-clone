@@ -30,35 +30,39 @@ def tasks():
 @app.route('/generate_schedule', methods=['POST'])
 def generate_schedule():
     try:
-        # Retrieve task inputs from the form
-        task1_name = request.form['task1']
-        task1_duration = int(request.form['task1_duration'])
-        task2_name = request.form['task2']
-        task2_duration = int(request.form['task2_duration'])
-        task3_name = request.form['task3']
-        task3_duration = int(request.form['task3_duration'])
+        sleep_hours = session.get('sleep_hours', 0)  # Default to 0 if not set
+        tasks = []
+        total_duration = sleep_hours
 
-        # Get sleep hours from session
-        sleep_hours = session.get('sleep_hours')
+        # Loop through task inputs to collect names and durations
+        for i in range(1, 10):  # Assuming a max of 9 tasks
+            task_name = request.form.get(f'task{i}')
+            task_duration = request.form.get(f'task{i}_duration')
 
-        # Validate task durations (must be positive numbers)
-        if task1_duration < 0 or task2_duration < 0 or task3_duration < 0:
-            return "Durations must be positive.", 400
+            if task_name and task_duration:
+                task_duration = int(task_duration)
+                if task_duration < 0:
+                    return "Durations must be positive.", 400
+                tasks.append((task_name, task_duration))
+                total_duration += task_duration
 
         # Ensure the total time doesn't exceed 24 hours
-        total_time = task1_duration + task2_duration + task3_duration + sleep_hours
-        if total_time > 24:
+        if total_duration > 24:
             return "The total duration of tasks and sleep cannot exceed 24 hours.", 400
 
-        # Generate the schedule and render it on the HTML page
-        schedule = [
-            {"name": "Sleep", "start": "00:00", "end": f"{sleep_hours:02}:00", "duration": sleep_hours},
-            {"name": task1_name, "start": f"{sleep_hours:02}:00", "end": f"{sleep_hours + task1_duration:02}:00", "duration": task1_duration},
-            {"name": task2_name, "start": f"{sleep_hours + task1_duration:02}:00", "end": f"{sleep_hours + task1_duration + task2_duration:02}:00", "duration": task2_duration},
-            {"name": task3_name, "start": f"{sleep_hours + task1_duration + task2_duration:02}:00", "end": f"{sleep_hours + task1_duration + task2_duration + task3_duration:02}:00", "duration": task3_duration},
-        ]
+        # Generate the schedule
+        schedule = []
+        current_time = 0  # Start from midnight
+
+        schedule.append({"name": "Sleep", "start": f"{current_time:02}:00", "end": f"{sleep_hours:02}:00", "duration": sleep_hours})
+        current_time += sleep_hours
+
+        for task_name, task_duration in tasks:
+            schedule.append({"name": task_name, "start": f"{current_time:02}:00", "end": f"{current_time + task_duration:02}:00", "duration": task_duration})
+            current_time += task_duration
 
         return render_template('schedule.html', schedule=schedule)
+
     except ValueError:
         return "Invalid input. Please enter valid task durations.", 400
 
